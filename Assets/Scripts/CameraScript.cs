@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Device;
 using UnityEngine.InputSystem;
 
 public class CameraScript : MonoBehaviour
@@ -7,8 +8,15 @@ public class CameraScript : MonoBehaviour
     private InputAction lookAction;
     private Vector3 cameraAngles;
     private Vector3 r;
+
+    // sensitivity
     private float sensitivityH = 10f;
     private float sensitivityV = -6f;
+
+    // distance
+    private float minFpvDistance = 1f;
+    private float maxFpvDistance = 18f;
+   
 
     void Start() {
         lookAction = InputSystem.actions.FindAction("Look");
@@ -18,12 +26,36 @@ public class CameraScript : MonoBehaviour
     }
 
     void Update() {
+        Vector2 scrollWheel = Input.mouseScrollDelta;
+        if(scrollWheel.y != 0) {
+            if(r.magnitude > minFpvDistance && r.magnitude < maxFpvDistance) {
+                float rr = r.magnitude * (1 - scrollWheel.y / 10);
+                if(rr <= minFpvDistance ) {
+                    r *= 0.01f;
+                }
+                else if(rr >= maxFpvDistance) {
+                    r *= 1f;
+                }
+                else {
+                    r *= (1 - scrollWheel.y / 10);
+                }
+            }
+            else if(scrollWheel.y < 0) {
+                r *= 100f;
+            }
+        }
+
         Vector2 lookValue = lookAction.ReadValue<Vector2>();
         if (lookValue != Vector2.zero) {
             cameraAngles.x += lookValue.y * Time.deltaTime * sensitivityV;
             cameraAngles.y += lookValue.x * Time.deltaTime * sensitivityH;
 
-            cameraAngles.x = Mathf.Clamp(cameraAngles.x, 35, 75);
+            if(r.y < 0.90f) {
+                cameraAngles.x = Mathf.Clamp(cameraAngles.x, -10, 40);
+            }
+            else {
+                cameraAngles.x = Mathf.Clamp(cameraAngles.x, 35, 75);
+            }
 
             this.transform.eulerAngles = cameraAngles;
         }
