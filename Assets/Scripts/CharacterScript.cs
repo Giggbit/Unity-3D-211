@@ -14,7 +14,19 @@ public class CharacterScript : MonoBehaviour
     }
 
     void Update() {
+        Vector3 f = Camera.main.transform.forward;
+        f.y = 0.0f;
+        if (f == Vector3.zero) { 
+            f = Camera.main.transform.up;
+            f.y = 0.0f;
+        }
+        f.Normalize();
+
+        Vector3 r = Camera.main.transform.right;
+        r.y = 0.0f;
+        r.Normalize();
+
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
-        rb.AddForce(300 * Time.deltaTime * (Camera.main.transform.right * moveValue.x + Camera.main.transform.forward * moveValue.y));
+        rb.AddForce(300 * Time.deltaTime * (r * moveValue.x + f * moveValue.y) /*(Camera.main.transform.right * moveValue.x + Camera.main.transform.forward * moveValue.y)*/);
     }
 }
