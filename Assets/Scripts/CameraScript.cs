@@ -32,6 +32,7 @@ public class CameraScript : MonoBehaviour
                 float rr = r.magnitude * (1 - scrollWheel.y / 10);
                 if(rr <= minFpvDistance ) {
                     r *= 0.01f;
+                    GameState.isFpv = true;
                 }
                 else if(rr >= maxFpvDistance) {
                     r *= 1f;
@@ -42,6 +43,7 @@ public class CameraScript : MonoBehaviour
             }
             else if(scrollWheel.y < 0) {
                 r *= 100f;
+                GameState.isFpv = false;
             }
         }
 

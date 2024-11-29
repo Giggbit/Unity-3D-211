@@ -27,6 +27,13 @@ public class CharacterScript : MonoBehaviour
         r.Normalize();
 
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
-        rb.AddForce(300 * Time.deltaTime * (r * moveValue.x + f * moveValue.y) /*(Camera.main.transform.right * moveValue.x + Camera.main.transform.forward * moveValue.y)*/);
+        rb.AddForce(300 * Time.deltaTime * (r * moveValue.x + f * moveValue.y));
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if(GameObject.FindWithTag("battery")) {
+            FlashlightState.charge += 0.5f;
+            Destroy(other.gameObject);
+        }
     }
 }
