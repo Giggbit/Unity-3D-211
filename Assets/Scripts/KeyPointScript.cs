@@ -26,8 +26,7 @@ public class KeyPointScript : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("character")) {
             GameState.collectedItems.Add("Key" + keyPointName, part);
-            GameState.TriggerGameEvent("KeyPoint", new GameEvents.MessageEvent
-            {
+            GameState.TriggerGameEvent("KeyPoint", new GameEvents.MessageEvent {
                 message = "Key " + keyPointName,
                 data = part,
             });
