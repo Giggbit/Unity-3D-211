@@ -6,6 +6,8 @@ public class FlashlightScript : MonoBehaviour
     private Light flashlight;
     private bool isOnFlashlight;
 
+    public float chargeLevel => FlashlightState.charge;
+
     void Start() {
         parentTransform = transform.parent;
         if(parentTransform == null ) {
