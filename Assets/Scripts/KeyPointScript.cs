@@ -7,12 +7,16 @@ public class KeyPointScript : MonoBehaviour
     [SerializeField]
     private float timeout = 5.0f;
     private float leftTime;
+    private AudioSource getKeySound;
 
     public float part;
 
     void Start() {
         leftTime = timeout;
         part = 1.0f;
+
+        getKeySound = GetComponent<AudioSource>();
+        GameState.Subscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 
     void Update() {
@@ -30,7 +34,18 @@ public class KeyPointScript : MonoBehaviour
                 message = "Key " + keyPointName,
                 data = part,
             });
+            getKeySound.Play();
             Destroy(gameObject);
         }
+    }
+
+    private void OnSoundsVolumeTrigger(string eventName, object data) { 
+        if(eventName == "EffectsVolume") { 
+            getKeySound.volume = (float)data;
+        }
+    }
+
+    private void OnDestroy() {
+        GameState.Unsubscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 }

@@ -6,11 +6,14 @@ public class DoorScript : MonoBehaviour
     [SerializeField]
     private string requiredKey = "1";
     private float openingTime = 2f;
-    private float timeout = 0f; 
+    private float timeout = 0f;
+    private AudioSource closeSound;
+    private AudioSource openSound;
 
     private void OnCollisionEnter(Collision collision) {
         if(collision.gameObject.CompareTag("character")) {
             if (GameState.collectedItems.ContainsKey("Key" + requiredKey)) {
+                openSound.Play();
                 GameState.TriggerGameEvent("Door", 
                     new GameEvents.MessageEvent {
                         message = "Door opening",
@@ -20,6 +23,7 @@ public class DoorScript : MonoBehaviour
                 timeout = openingTime;
             }
             else {
+                closeSound.Play();
                 GameState.TriggerGameEvent("Door", 
                     new GameEvents.MessageEvent {
                         message = "Find the key!",
@@ -31,7 +35,9 @@ public class DoorScript : MonoBehaviour
     }
 
     void Start() {
-        
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        closeSound = audioSources[0];
+        openSound = audioSources[1];
     }
 
     void Update() {

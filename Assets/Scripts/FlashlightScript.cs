@@ -5,6 +5,7 @@ public class FlashlightScript : MonoBehaviour
     private Transform parentTransform;
     private Light flashlight;
     private bool isOnFlashlight;
+    private AudioSource switchFlashlightSound;
 
     public float chargeLevel => FlashlightState.charge;
 
@@ -16,6 +17,8 @@ public class FlashlightScript : MonoBehaviour
         flashlight = GetComponent<Light>();
         isOnFlashlight = true;
         FlashlightState.charge = 2.0f;
+        switchFlashlightSound = GetComponent<AudioSource>();
+        GameState.Subscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 
     void Update() {
@@ -37,6 +40,7 @@ public class FlashlightScript : MonoBehaviour
         }
 
         if(Input.GetKeyUp(KeyCode.R)) {
+            switchFlashlightSound.Play();
             if(flashlight.enabled == true) {
                 flashlight.enabled = false;
                 isOnFlashlight = false;
@@ -46,5 +50,15 @@ public class FlashlightScript : MonoBehaviour
                 isOnFlashlight = true;
             }
         }
+    }
+
+    private void OnSoundsVolumeTrigger(string eventName, object data) { 
+        if(eventName == "EffectsVolume") { 
+            switchFlashlightSound.volume = (float)data;
+        }
+    }
+
+    private void OnDestroy() {
+        GameState.Unsubscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 }
