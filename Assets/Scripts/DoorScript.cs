@@ -10,6 +10,23 @@ public class DoorScript : MonoBehaviour
     private AudioSource closeSound;
     private AudioSource openSound;
 
+    void Start() {
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        closeSound = audioSources[0];
+        openSound = audioSources[1];
+
+        closeSound.volume = GameState.effectsVolume;
+        openSound.volume = GameState.effectsVolume;
+        GameState.Subscribe(OnSoundsVolumeTrigger, "EffectsVolume");
+    }
+
+    void Update() {
+        if(timeout > 0f) {
+            transform.Translate(Time.deltaTime / openingTime, 0, 0);
+            timeout -= Time.deltaTime;
+        }
+    }
+
     private void OnCollisionEnter(Collision collision) {
         if(collision.gameObject.CompareTag("character")) {
             if (GameState.collectedItems.ContainsKey("Key" + requiredKey)) {
@@ -34,16 +51,10 @@ public class DoorScript : MonoBehaviour
         }
     }
 
-    void Start() {
-        AudioSource[] audioSources = GetComponents<AudioSource>();
-        closeSound = audioSources[0];
-        openSound = audioSources[1];
-    }
-
-    void Update() {
-        if(timeout > 0f) {
-            transform.Translate(Time.deltaTime / openingTime, 0, 0);
-            timeout -= Time.deltaTime;
+    private void OnSoundsVolumeTrigger(string eventName, object data) { 
+        if(eventName == "EffectsVolume") { 
+            openSound.volume = (float)data;
+            closeSound.volume = (float)data;
         }
     }
 }

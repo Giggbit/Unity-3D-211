@@ -9,8 +9,10 @@ public class GameState
 
     public static Dictionary<String, object> collectedItems { get; set; } = new();
 
-    public static float effectsVolume { get; set; }
-    public static float ambientVolume { get; set; }
+    public static float effectsVolume { get; set; } = 0.5f;
+    public static float ambientVolume { get; set; } = 0.5f;
+    public static float lookSensitivityX { get; set; } = 10.0f;
+    public static float lookSensitivityY { get; set; } = -6.0f;
 
     #region Game events
     private const string broadcastKey = "Broadcast";

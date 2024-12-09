@@ -7,12 +7,10 @@ public class CharacterScript : MonoBehaviour
 {
     private Rigidbody rb;
     private InputAction moveAction;
-    //private float batteryCharge;
 
     void Start() {
         rb = GetComponent<Rigidbody>();
         moveAction = InputSystem.actions.FindAction("Move");
-        //batteryCharge = 0.5f;
     }
 
     void Update() {
@@ -31,16 +29,4 @@ public class CharacterScript : MonoBehaviour
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
         rb.AddForce(300 * Time.deltaTime * (r * moveValue.x + f * moveValue.y));
     }
-
-    /*private void OnTriggerEnter(Collider other) {
-        if(other.gameObject.CompareTag("battery")) {
-            //GameState.collectedItems.Add("Battery", batteryCharge);
-            GameState.TriggerGameEvent("Battery", new GameEvents.MessageEvent {
-                message = "+ " + batteryCharge + " battery charge",
-                data = batteryCharge,
-            });
-            FlashlightState.charge += batteryCharge;
-            Destroy(other.gameObject);
-        }
-    }*/
 }
