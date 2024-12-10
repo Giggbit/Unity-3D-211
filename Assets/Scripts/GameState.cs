@@ -7,6 +7,11 @@ public class GameState
     public static bool isDay { get; set; } 
     public static bool isFpv { get; set; }
 
+    public static float minFpvDistance { get; set; } = 1f;
+    public static float maxFpvDistance { get; set; } = 18f;
+
+    public static int room { get; set; } = 1;
+
     public static Dictionary<String, object> collectedItems { get; set; } = new();
 
     public static float effectsVolume { get; set; } = 0.5f;

@@ -7,16 +7,7 @@ public class CameraScript : MonoBehaviour
     private Transform character;
     private InputAction lookAction;
     private Vector3 cameraAngles;
-    private Vector3 r;
-
-    // sensitivity
-    private float sensitivityH = 10f;
-    private float sensitivityV = -6f;
-
-    // distance
-    private float minFpvDistance = 1f;
-    private float maxFpvDistance = 18f;
-   
+    private Vector3 r;   
 
     void Start() {
         lookAction = InputSystem.actions.FindAction("Look");
@@ -28,13 +19,13 @@ public class CameraScript : MonoBehaviour
     void Update() {
         Vector2 scrollWheel = Input.mouseScrollDelta;
         if(scrollWheel.y != 0) {
-            if(r.magnitude > minFpvDistance && r.magnitude < maxFpvDistance) {
+            if(r.magnitude > GameState.minFpvDistance && r.magnitude < GameState.maxFpvDistance) {
                 float rr = r.magnitude * (1 - scrollWheel.y / 10);
-                if(rr <= minFpvDistance ) {
+                if(rr <= GameState.minFpvDistance ) {
                     r *= 0.01f;
                     GameState.isFpv = true;
                 }
-                else if(rr >= maxFpvDistance) {
+                else if(rr >= GameState.maxFpvDistance) {
                     r *= 1f;
                 }
                 else {
@@ -43,6 +34,7 @@ public class CameraScript : MonoBehaviour
             }
             else if(scrollWheel.y < 0) {
                 r *= 100f;
+                r *= (1 - scrollWheel.y / 10);
                 GameState.isFpv = false;
             }
         }

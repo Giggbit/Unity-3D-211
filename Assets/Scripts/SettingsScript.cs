@@ -7,6 +7,7 @@ public class SettingsScript : MonoBehaviour
     private GameObject content;
     private Slider effectsSlider;
     private Slider ambientSlider;
+    private Slider fpvSlider;
     private Slider sensitivityXSlider;
     private Slider sensitivityYSlider;
     private Toggle isOffSoundsToggle;
@@ -22,11 +23,13 @@ public class SettingsScript : MonoBehaviour
         effectsSlider = contentTransform.Find("Sound/EffectBackground/EffectSlider").GetComponent<Slider>();
         ambientSlider = contentTransform.Find("Sound/AmbientBackground/AmbientSlider").GetComponent<Slider>();
         isOffSoundsToggle = contentTransform.Find("Sound/Toggle").GetComponent<Toggle>();
+        fpvSlider = contentTransform.Find("Controls/FpvBackground/FpvSlider").GetComponent<Slider>();
         sensitivityXSlider = contentTransform.Find("Controls/SensitivityBackground/XSensitivitySlider").GetComponent<Slider>();
         sensitivityYSlider = contentTransform.Find("Controls/SensitivityBackground/YSensitivitySlider").GetComponent<Slider>();
         linkToggle = contentTransform.Find("Controls/SensitivityBackground/linkToggle").GetComponent<Toggle>();
         reloadMessageTMP = contentTransform.Find("Controls/ReloadMessageTMP").GetComponent<TextMeshProUGUI>();
 
+        OnFpvSliderChanged(fpvSlider.value);
         OnEffectsSliderChanged(effectsSlider.value);
         OnAmbientSliderChanged(ambientSlider.value);
         OnSensitivityXSliderChanged(sensitivityXSlider.value);
@@ -45,6 +48,11 @@ public class SettingsScript : MonoBehaviour
     }
 
     private void LoadSettings() { 
+        if(PlayerPrefs.HasKey(nameof(fpvSlider))) {
+            OnFpvSliderChanged(
+                PlayerPrefs.GetFloat(nameof(fpvSlider))
+            );
+        }
         if(PlayerPrefs.HasKey(nameof(effectsSlider))) {
             OnEffectsSliderChanged(
                 PlayerPrefs.GetFloat(nameof(effectsSlider))
@@ -74,6 +82,7 @@ public class SettingsScript : MonoBehaviour
     }
 
     public void OnSaveButtonClick() { 
+        PlayerPrefs.SetFloat(nameof(fpvSlider), fpvSlider.value);
         PlayerPrefs.SetFloat(nameof(effectsSlider), effectsSlider.value);
         PlayerPrefs.SetFloat(nameof(ambientSlider), ambientSlider.value);
         PlayerPrefs.SetInt(nameof(isOffSoundsToggle), isOffSoundsToggle.isOn ? 1 : 0);
@@ -108,6 +117,11 @@ public class SettingsScript : MonoBehaviour
             OnEffectsSliderChanged(effectsSlider.value);
             OnAmbientSliderChanged(ambientSlider.value);
         }
+    }
+
+    public void OnFpvSliderChanged(float value) {
+        GameState.minFpvDistance = Mathf.Lerp(0.5f, 1.5f, value);
+        fpvSlider.value = value;
     }
 
     public void OnSensitivityXSliderChanged(float value) {
